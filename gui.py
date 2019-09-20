@@ -21,7 +21,7 @@ def show():
     myButton = partial(Button, root, bg=button_bg, padx=12,
                        pady=3, activebackground=button_active_bg)
 
-    buttonx = myButton(text='X', command=lambda: get_input(entry, 'x'))
+    buttonx = myButton(text='X', command=lambda: get_input(entry, 'X'))
     buttonx.grid(row=4, column=2, ipadx=5, ipady=7,
                  padx=3, pady=5, sticky=N+W+S+E)
 

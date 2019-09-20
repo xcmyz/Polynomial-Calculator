@@ -4,7 +4,7 @@ from modules import *
 
 def assign(entry):
     entry.config(state=NORMAL)
-    entry.insert(END, " [A]->")
+    entry.insert(END, " [A]: ")
     entry.icursor(len(entry.get()))
     entry.xview(len(entry.get()))
 
@@ -30,46 +30,32 @@ def clear(entry):
 def cal(entry):
     entry.config(state=NORMAL)
     input = entry.get()
-    if "x" in input:
+    if "X" in input and "A" not in input:
         str_out = str(input)
-        index_list = list()
-
-        for i in range(len(str_out)):
-            if str_out[i] == "+" or str_out[i] == "-":
-                if i != 0:
-                    index_list.append(i)
-        index_list.append(len(str_out))
-
-        term_list = list()
-        for j in range(len(index_list)):
-            if j == 0:
-                term = str_out[0:index_list[j]]
-                term_list.append(parse_term(term))
-            else:
-                term = str_out[index_list[j-1]:index_list[j]]
-                term_list.append(parse_term(term))
+        term_list = parse_input(str_out)
         print(term_list)
-        term_index_list = [i for i in range(len(term_list))]
-        new_term_list = [[0., 0.]]
-        while len(term_index_list) != 0:
-            stan_ind = term_index_list[0]
-            term_index_list.remove(stan_ind)
-            for ind in term_index_list:
-                if term_list[ind][1] == term_list[stan_ind][1]:
-                    term_list[stan_ind][0] += term_list[ind][0]
-                    term_index_list.remove(ind)
+        new_term_list = reprocess(term_list)
+        print(new_term_list)
+        str_P = draw_P(new_term_list)
+        print(str_P)
 
-            for index, pre_ele in enumerate(new_term_list):
-                if term_list[stan_ind][1] >= pre_ele[1]:
-                    p_1 = new_term_list[0:index]
-                    p_2 = new_term_list[index:]
-                    p_1.append(term_list[stan_ind])
-                    new_term_list = p_1 + p_2
-                    break
+        clear(entry)
+        entry.insert(END, str_P)
+        entry.icursor(len(entry.get()))
+        entry.xview(len(entry.get()))
+    elif "A" in input:
+        str_out = input[0:input.index("A")-2]
+        a_v = float(input[input.index("A")+4:])
+        term_list = parse_input(str_out)
+        print(term_list)
+        new_term_list = reprocess(term_list)
         print(new_term_list)
 
-    elif "A" in input:
-        pass
+        value = get_value(new_term_list, a_v)
+        clear(entry)
+        entry.insert(END, str(value))
+        entry.icursor(len(entry.get()))
+        entry.xview(len(entry.get()))
     else:
         output = str(eval(input.strip()))
         clear(entry)
