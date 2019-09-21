@@ -4,7 +4,7 @@ from modules import *
 
 def assign(entry):
     entry.config(state=NORMAL)
-    entry.insert(END, " [A]: ")
+    entry.insert(END, " x=")
     entry.icursor(len(entry.get()))
     entry.xview(len(entry.get()))
 
@@ -30,7 +30,7 @@ def clear(entry):
 def cal(entry):
     entry.config(state=NORMAL)
     input = entry.get()
-    if "X" in input and "A" not in input:
+    if "X" in input and "x" not in input:
         str_out = str(input)
         term_list = parse_input(str_out)
         print(term_list)
@@ -43,9 +43,9 @@ def cal(entry):
         entry.insert(END, str_P)
         entry.icursor(len(entry.get()))
         entry.xview(len(entry.get()))
-    elif "A" in input:
-        str_out = input[0:input.index("A")-2]
-        a_v = float(input[input.index("A")+4:])
+    elif "x" in input:
+        str_out = input[0:input.index("x")-1]
+        a_v = float(input[input.index("x")+2:])
         term_list = parse_input(str_out)
         print(term_list)
         new_term_list = reprocess(term_list)
@@ -66,4 +66,26 @@ def cal(entry):
 
 
 def derivation(entry):
-    pass
+    entry.config(state=NORMAL)
+    input = entry.get()
+    str_out = str(input)
+    term_list = parse_input(str_out)
+    print(term_list)
+    new_term_list = reprocess(term_list)
+    print(new_term_list)
+
+    for index, [a, b] in enumerate(new_term_list):
+        new_a = b * a
+        if b != 0:
+            new_b = b - 1
+        else:
+            new_b = 0.
+        new_term_list[index] = [new_a, new_b]
+    new_term_list = reprocess(new_term_list)
+    str_P = draw_P(new_term_list)
+    print(str_P)
+
+    clear(entry)
+    entry.insert(END, str_P)
+    entry.icursor(len(entry.get()))
+    entry.xview(len(entry.get()))
